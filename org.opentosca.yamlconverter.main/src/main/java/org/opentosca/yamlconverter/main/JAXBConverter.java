@@ -1,25 +1,16 @@
 package org.opentosca.yamlconverter.main;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import org.opentosca.model.tosca.TDefinitions;
 import org.opentosca.yamlconverter.main.interfaces.IToscaXml2XmlBeanConverter;
 import org.xml.sax.SAXException;
+
+import javax.xml.bind.*;
+import javax.xml.namespace.QName;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This converter uses JAXB to convert between Tosca XML and Tosca XML beans.
@@ -37,11 +28,13 @@ public class JAXBConverter implements IToscaXml2XmlBeanConverter {
 			final OutputStream stream = new ByteArrayOutputStream();
 			final JAXBContext jaxbContext = JAXBContext.newInstance(TDefinitions.class);
 			final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			jaxbMarshaller.setSchema(getToscaSchema());
+//			jaxbMarshaller.setSchema(getToscaSchema());
 
 			// output pretty printed
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			jaxbMarshaller.marshal(root, stream);
+			QName qName = new QName("test.conversion", "tdefinitions");
+			JAXBElement<TDefinitions> rootElement = new JAXBElement<>(qName, TDefinitions.class, root);
+			jaxbMarshaller.marshal(rootElement, stream);
 
 			return stream.toString();
 

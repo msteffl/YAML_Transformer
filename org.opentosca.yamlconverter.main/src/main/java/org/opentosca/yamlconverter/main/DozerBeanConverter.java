@@ -1,10 +1,5 @@
 package org.opentosca.yamlconverter.main;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.dozer.DozerBeanMapper;
 import org.dozer.DozerBeanMapperSingletonWrapper;
 import org.opentosca.model.tosca.TDefinitions;
@@ -12,6 +7,11 @@ import org.opentosca.model.tosca.TestRoot;
 import org.opentosca.yamlconverter.main.interfaces.IToscaBean2BeanConverter;
 import org.opentosca.yamlconverter.yamlmodel.YamlRootElement;
 import org.opentosca.yamlconverter.yamlmodel.yaml.element.YAMLElement;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This Converter uses Dozer to convert between XML and YAML beans.
@@ -24,7 +24,7 @@ public class DozerBeanConverter implements IToscaBean2BeanConverter {
 	/**
 	 * Name of the folder in which the dozer mapping xmls are stored.
 	 */
-	private static final String DOZERMAPPINGS_FOLDER = "dozermappings";
+	private static final String DOZERMAPPINGS_FOLDER = "/dozermappings";
 
 	/**
 	 * The dozer mapper.
@@ -53,7 +53,7 @@ public class DozerBeanConverter implements IToscaBean2BeanConverter {
 		final File[] filesOfFolder = getFilesOfFolder(foldername);
 		for (final File f : filesOfFolder) {
 			if (f.isFile() && f.getName().endsWith(".xml")) {
-				myMappingFiles.add("file:" + foldername + "/" + f.getName());
+				myMappingFiles.add(foldername.substring(1) + "/" + f.getName());
 			} else if (recursive && f.isDirectory()) {
 				myMappingFiles.addAll(getMappingfiles(f.getPath(), true));
 			}
